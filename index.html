@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tab — Bumblebee</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Full-screen ambient background video -->
+  <div class="bg-wrap" aria-hidden="true">
+    <video id="bg-video" autoplay muted loop playsinline preload="auto" poster="">
+      <source src="assets/video.mp4" type="video/mp4" />
+      <source src="assets/bg.mp4" type="video/mp4" />
+    </video>
+    <div class="scrim"></div>
+    <div class="fallback-bg"></div>
+  </div>
+
+  <div class="accent-line"></div>
+
+  <!-- Main centered content -->
+  <main class="center-stage">
+    <div class="clock-block">
+      <div id="clock" class="clock">00:00</div>
+      <div id="date" class="date">—</div>
+      <div id="greeting" class="greeting">Good evening</div>
+    </div>
+
+    <form id="search-form" class="search-pill" autocomplete="off" spellcheck="false">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search-input" type="text" placeholder="Search Google or type a URL" aria-label="Search" autocomplete="off" />
+      <button type="submit" class="search-go" aria-label="Search">↗</button>
+      <div id="suggestions" class="suggestions hidden" role="listbox" aria-label="Search suggestions"></div>
+    </form>
+
+    <!-- Quick links — FREQUENT / PINNED toggle -->
+    <nav class="quick-links" id="quick-links" aria-label="Quick links">
+      <a href="https://youtube.com" class="qlink" data-index="0">
+        <span class="qlink-icon youtube">
+          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="#FF0000" d="M23.5 12s0-3.9-.5-5.8a1 1 0 0 0-.7-.7C20.4 4.9 12 4.9 12 4.9s-8.4 0-10.3.6a1 1 0 0 0-.7.7C.5 8.1.5 12 .5 12s0 3.9.5 5.8a1 1 0 0 0 .7.7c1.9.6 10.3.6 10.3.6s8.4 0 10.3-.6a1 1 0 0 0 .7-.7c.5-1.9.5-5.8.5-5.8Z"/><path fill="#fff" d="M9.7 15.6 15.6 12 9.7 8.4z"/></svg>
+        </span>
+        <span class="qlink-label">YouTube</span>
+      </a>
+      <a href="https://github.com" class="qlink" data-index="1">
+        <span class="qlink-icon github">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#181717" d="M12 0.3C5.4 0.3 0 5.7 0 12.3c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2c-3.3.7-4-1.4-4-1.4-.5-1.3-1.2-1.6-1.2-1.6-1-0.7.1-0.7.1-0.7 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.3-.5-1.3.1-2.7 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.4.2 2.4.1 2.7.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6C20.6 22.1 24 17.6 24 12.3 24 5.7 18.6.3 12 .3Z"/></svg>
+        </span>
+        <span class="qlink-label">GitHub</span>
+      </a>
+      <a href="https://x.com" class="qlink" data-index="2">
+        <span class="qlink-icon x">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="#000" d="M18.9 2.2H22l-6.9 7.9L23.3 22h-6.4l-5-6.6L5.9 22H2.8l7.4-8.5L2.2 2.2h6.6l4.5 6 5.6-6ZM17.8 20h1.7L7.2 3.9H5.3L17.8 20Z"/></svg>
+        </span>
+        <span class="qlink-label">X</span>
+      </a>
+      <a href="https://mail.google.com" class="qlink" data-index="3">
+        <span class="qlink-icon gmail">
+          <!-- Original Gmail 2020 logo — official vector from Wikimedia -->
+          <svg viewBox="52 42 88 66" width="28" height="28" aria-hidden="true" role="img">
+            <path fill="#4285f4" d="M58 108h14V74L52 59v43c0 3.32 2.69 6 6 6"/>
+            <path fill="#34a853" d="M120 108h14c3.32 0 6-2.69 6-6V59l-20 15"/>
+            <path fill="#fbbc04" d="M120 48v26l20-15v-8c0-7.42-8.47-11.65-14.4-7.2"/>
+            <path fill="#ea4335" d="M72 74V48l24 18 24-18v26L96 92"/>
+            <path fill="#c5221f" d="M52 51v8l20 15V48l-5.6-4.2c-5.94-4.45-14.4-.22-14.4 7.2"/>
+          </svg>
+        </span>
+        <span class="qlink-label">Gmail</span>
+      </a>
+    </nav>
+    <div class="quick-links-meta">
+      <button id="toggle-mode" class="toggle-mode-btn" title="Toggle frequent / pinned sites">Show pinned</button>
+      <p class="hint" id="qlink-hint">Right-click a quick link to edit · Drag video sticker & sticky note by header</p>
+    </div>
+  </main>
+
+  <!-- TV Frame video sticker — MOVABLE / MINIMIZABLE / CLOSABLE — video plays inside TV screen -->
+  <aside class="video-frame tv-frame" id="video-frame" aria-label="TV Bumblebee">
+    <div class="frame-header" id="frame-header">
+      <div class="frame-dots" aria-hidden="true">
+        <button class="dot dot-close" data-action="close" aria-label="Close TV"><span>×</span></button>
+        <button class="dot dot-min" data-action="minimize" aria-label="Minimize TV"><span>−</span></button>
+        <button class="dot dot-max" data-action="expand" aria-label="Expand TV"><span>⤢</span></button>
+      </div>
+      <span class="frame-title">BUMBLEBEE — TV</span>
+      <span class="frame-badge" id="audio-badge">muted</span>
+    </div>
+
+    <div class="tv-wrap" id="tv-wrap">
+      <!-- Screen where video lives — positioned to match transparent hole in tv-frame.png -->
+      <div class="tv-screen" id="tv-screen">
+        <video id="frame-video" autoplay muted loop playsinline preload="auto">
+          <source src="assets/sticker.mp4" type="video/mp4" />
+          <source src="assets/video.mp4" type="video/mp4" />
+        </video>
+        <div class="frame-controls">
+          <button id="play-toggle" class="glass-btn play-btn" aria-label="Play with sound">
+            <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72L19 12z"/></svg>
+            <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+          </button>
+          <button id="mute-toggle" class="glass-btn mute-btn" aria-label="Mute toggle">
+            <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5L6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            <svg class="icon-unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="display:none"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M17.8 6.2a8 8 0 0 1 0 11.6"/></svg>
+          </button>
+          <div class="scrub-wrap">
+            <div class="scrub-track" id="scrub-track">
+              <div class="scrub-fill" id="scrub-fill"></div>
+              <div class="scrub-thumb" id="scrub-thumb"></div>
+            </div>
+            <span class="time-label" id="time-label">0:00 / 0:32</span>
+          </div>
+        </div>
+      </div>
+      <!-- TV chrome overlay — transparent screen lets video show through -->
+      <img src="assets/tv-frame.png" class="tv-image" alt="Retro TV frame" draggable="false" />
+    </div>
+
+    <div class="caption-strip" id="caption-strip">
+      <p id="caption-text" class="caption-text" contenteditable="false" spellcheck="false" title="Click to edit">“ More than meets the eye. ” — tap to edit caption</p>
+      <button id="caption-edit" class="caption-edit-btn" aria-label="Edit caption">✎</button>
+    </div>
+  </aside>
+
+  <!-- Sticky Note widget -->
+  <aside class="sticky-note" id="sticky-note" aria-label="Sticky note">
+    <div class="sticky-header" id="sticky-header">
+      <div class="sticky-dots">
+        <button class="dot dot-close" data-sticky="close" aria-label="Close sticky note"><span>×</span></button>
+        <button class="dot dot-min" data-sticky="minimize" aria-label="Minimize sticky note"><span>−</span></button>
+        <button class="dot dot-max" data-sticky="expand" aria-label="Expand sticky note"><span>⤢</span></button>
+      </div>
+      <span class="sticky-title">STICKY NOTE</span>
+      <span class="sticky-actions">
+        <button id="sticky-clear" class="sticky-mini-btn" title="Clear note">clear</button>
+      </span>
+    </div>
+    <div class="sticky-body" id="sticky-body">
+      <textarea id="sticky-text" placeholder="Type your thoughts…
+
+• Drag by header to move
+• Auto-saves instantly
+• Pick a color below" spellcheck="false"></textarea>
+    </div>
+    <div class="sticky-footer">
+      <div class="color-dots" id="color-dots">
+        <button class="color-dot active" data-color="#FFE55C" style="background:#FFE55C" aria-label="Yellow"></button>
+        <button class="color-dot" data-color="#FFB3C1" style="background:#FFB3C1" aria-label="Pink"></button>
+        <button class="color-dot" data-color="#B9FBC0" style="background:#B9FBC0" aria-label="Mint"></button>
+        <button class="color-dot" data-color="#A0C4FF" style="background:#A0C4FF" aria-label="Blue"></button>
+        <button class="color-dot" data-color="#FFD60A" style="background:#FFD60A" aria-label="Bumblebee amber"></button>
+        <button class="color-dot" data-color="#FFFFFF" style="background:#FFFFFF; border:1px solid #ddd" aria-label="White"></button>
+      </div>
+      <span class="sticky-hint">drag • auto-save • <span id="sticky-count">0</span> chars</span>
+    </div>
+  </aside>
+
+  <!-- Restore pills (when closed/minimized) -->
+  <button id="frame-restore" class="restore-pill hidden" aria-label="Restore video sticker">
+    <span class="restore-dot" style="background:#FF5F56"></span> Show video sticker
+  </button>
+  <button id="sticky-restore" class="restore-pill hidden" style="left:28px; right:auto;" aria-label="Restore sticky note">
+    <span class="restore-dot" style="background:#FFE55C; border:1px solid rgba(0,0,0,0.12)"></span> Show sticky note
+  </button>
+
+  <div id="video-notice" class="video-notice hidden">
+    <span class="notice-dot"></span>
+    Drop <strong>video.mp4</strong> → background, <strong>sticker.mp4</strong> → corner. Or use <code>bg.mp4</code> alias.
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
