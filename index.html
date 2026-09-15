@@ -93,31 +93,27 @@
           <source src="assets/sticker.mp4" type="video/mp4" />
           <source src="assets/video.mp4" type="video/mp4" />
         </video>
-        <div class="frame-controls">
-          <button id="play-toggle" class="glass-btn play-btn" aria-label="Play with sound">
-            <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72L19 12z"/></svg>
-            <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-          </button>
-          <button id="mute-toggle" class="glass-btn mute-btn" aria-label="Mute toggle">
-            <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5L6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-            <svg class="icon-unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="display:none"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M17.8 6.2a8 8 0 0 1 0 11.6"/></svg>
-          </button>
-          <div class="scrub-wrap">
-            <div class="scrub-track" id="scrub-track">
-              <div class="scrub-fill" id="scrub-fill"></div>
-              <div class="scrub-thumb" id="scrub-thumb"></div>
-            </div>
-            <span class="time-label" id="time-label">0:00 / 0:32</span>
-          </div>
-        </div>
       </div>
       <!-- TV chrome overlay — transparent screen lets video show through -->
       <img src="assets/tv-frame.png" class="tv-image" alt="Retro TV frame" draggable="false" />
     </div>
-
-    <div class="caption-strip" id="caption-strip">
-      <p id="caption-text" class="caption-text" contenteditable="false" spellcheck="false" title="Click to edit">“ More than meets the eye. ” — tap to edit caption</p>
-      <button id="caption-edit" class="caption-edit-btn" aria-label="Edit caption">✎</button>
+    <!-- Controls replace caption — clean bar below TV -->
+    <div class="frame-controls tv-controls-below" id="tv-controls">
+      <button id="play-toggle" class="glass-btn play-btn" aria-label="Play with sound">
+        <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72L19 12z"/></svg>
+        <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      </button>
+      <button id="mute-toggle" class="glass-btn mute-btn" aria-label="Mute toggle">
+        <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5L6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        <svg class="icon-unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="display:none"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M17.8 6.2a8 8 0 0 1 0 11.6"/></svg>
+      </button>
+      <div class="scrub-wrap">
+        <div class="scrub-track" id="scrub-track">
+          <div class="scrub-fill" id="scrub-fill"></div>
+          <div class="scrub-thumb" id="scrub-thumb"></div>
+        </div>
+        <span class="time-label" id="time-label">0:00 / 0:32</span>
+      </div>
     </div>
   </aside>
 

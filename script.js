@@ -262,20 +262,22 @@ if(toggleBtn){
 // init
 applyMode(getMode());
 
-// ——— Caption ———
+// ——— Caption — removed per user request (controls now replace it) — guard if elements missing ———
 const captionText=document.getElementById('caption-text');
 const captionBtn=document.getElementById('caption-edit');
-const CAPTION_KEY='bumblebee_caption_v1';
-try{ const s=localStorage.getItem(CAPTION_KEY); if(s) captionText.textContent=s; }catch{}
-function setEditing(on){
-  captionText.contentEditable=on?'true':'false';
-  if(on){ captionText.focus(); const r=document.createRange(); r.selectNodeContents(captionText); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }
-  else { try{ localStorage.setItem(CAPTION_KEY, captionText.textContent.trim()); }catch{} }
+if(captionText && captionBtn){
+  const CAPTION_KEY='bumblebee_caption_v1';
+  try{ const s=localStorage.getItem(CAPTION_KEY); if(s) captionText.textContent=s; }catch{}
+  function setEditing(on){
+    captionText.contentEditable=on?'true':'false';
+    if(on){ captionText.focus(); const r=document.createRange(); r.selectNodeContents(captionText); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+    else { try{ localStorage.setItem(CAPTION_KEY, captionText.textContent.trim()); }catch{} }
+  }
+  captionBtn.addEventListener('click',()=>setEditing(captionText.contentEditable!=='true'));
+  captionText.addEventListener('click',()=>{ if(captionText.contentEditable!=='true') setEditing(true); });
+  captionText.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); setEditing(false); captionText.blur(); } if(e.key==='Escape'){ setEditing(false); captionText.blur(); }});
+  captionText.addEventListener('blur',()=>setEditing(false));
 }
-captionBtn.addEventListener('click',()=>setEditing(captionText.contentEditable!=='true'));
-captionText.addEventListener('click',()=>{ if(captionText.contentEditable!=='true') setEditing(true); });
-captionText.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); setEditing(false); captionText.blur(); } if(e.key==='Escape'){ setEditing(false); captionText.blur(); }});
-captionText.addEventListener('blur',()=>setEditing(false));
 
 // ——— Video sync & scrub ———
 function keepInSync(){ if(!bgVideo.duration||!frameVideo.duration) return; const drift=Math.abs(bgVideo.currentTime-frameVideo.currentTime); if(drift>0.35) bgVideo.currentTime=frameVideo.currentTime; }
