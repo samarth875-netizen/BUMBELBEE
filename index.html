@@ -18,6 +18,13 @@
   </div>
 
   <div class="accent-line"></div>
+  <!-- Tiny live weather — top-left, Silicon Valley fallback -->
+  <div id="weather" class="weather-widget" aria-live="polite" title="Live weather">
+    <span id="weather-icon" class="weather-icon">◐</span>
+    <span id="weather-temp" class="weather-temp">—°</span>
+    <span id="weather-desc" class="weather-desc">loading…</span>
+    <span id="weather-loc" class="weather-loc"></span>
+  </div>
 
   <!-- Main centered content -->
   <main class="center-stage">
@@ -68,10 +75,7 @@
         <span class="qlink-label">Gmail</span>
       </a>
     </nav>
-    <div class="quick-links-meta">
-      <button id="toggle-mode" class="toggle-mode-btn" title="Toggle frequent / pinned sites">Show pinned</button>
-      <p class="hint" id="qlink-hint">Right-click a quick link to edit · Drag video sticker & sticky note by header</p>
-    </div>
+
   </main>
 
   <!-- TV Frame video sticker — MOVABLE / MINIMIZABLE / CLOSABLE — video plays inside TV screen -->
@@ -162,6 +166,29 @@
     <span class="notice-dot"></span>
     Drop <strong>video.mp4</strong> → background, <strong>sticker.mp4</strong> → corner. Or use <code>bg.mp4</code> alias.
   </div>
+
+  <!-- News — Discover scroll (glass cube) — appears on scroll down like Chrome -->
+  <section id="news-section" class="news-section" aria-label="Discover news">
+    <div class="news-header">
+      <div class="news-title-wrap">
+        <h2 class="news-title">Discover</h2>
+        <p class="news-subtitle">Scroll for today's headlines — like the default Chrome tab</p>
+      </div>
+      <div class="news-actions">
+        <div class="news-category-pills" id="news-categories">
+          <button class="news-pill active" data-feed="top">Top</button>
+          <button class="news-pill" data-feed="technology">Tech</button>
+          <button class="news-pill" data-feed="sports">Sports</button>
+          <button class="news-pill" data-feed="business">Business</button>
+          <button class="news-pill" data-feed="entertainment">Entertainment</button>
+        </div>
+        <button id="news-refresh" class="news-refresh" aria-label="Refresh news">↻</button>
+      </div>
+    </div>
+    <div id="news-grid" class="news-grid" role="feed"></div>
+    <div id="news-dots" class="news-dots" aria-hidden="true"></div>
+    <div id="news-status" class="news-status">Loading headlines…</div>
+  </section>
 
   <script src="script.js"></script>
 </body>
