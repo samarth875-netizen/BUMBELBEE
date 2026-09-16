@@ -1,22 +1,22 @@
 // Bumblebee Cinematic New Tab — v2
 // Movable / closable / minimizable video sticker + sticky note
 
-const bgVideo = document.getElementById('bg-video');
-const frameVideo = document.getElementById('frame-video');
-const playBtn = document.getElementById('play-toggle');
-const muteBtn = document.getElementById('mute-toggle');
-const scrubTrack = document.getElementById('scrub-track');
-const scrubFill = document.getElementById('scrub-fill');
-const scrubThumb = document.getElementById('scrub-thumb');
-const timeLabel = document.getElementById('time-label');
-const audioBadge = document.getElementById('audio-badge');
-const videoNotice = document.getElementById('video-notice');
+const bgVideo = document.getElementById('bb-ambient-film');
+const frameVideo = document.getElementById('bb-tv-film');
+const playBtn = document.getElementById('bb-key-play-toggle');
+const muteBtn = document.getElementById('bb-key-mute-toggle');
+const scrubTrack = document.getElementById('bb-scrub-rail');
+const scrubFill = document.getElementById('bb-scrub-juice');
+const scrubThumb = document.getElementById('bb-scrub-knob');
+const timeLabel = document.getElementById('bb-timecode');
+const audioBadge = document.getElementById('bb-audio-chip');
+const videoNotice = document.getElementById('bb-missing-reel-toast');
 
 // ——— Tiny live weather — top-left, Silicon Valley fallback ———
-const weatherIcon = document.getElementById('weather-icon');
-const weatherTemp = document.getElementById('weather-temp');
-const weatherDesc = document.getElementById('weather-desc');
-const weatherLoc = document.getElementById('weather-loc');
+const weatherIcon = document.getElementById('bb-corner-weather-glyph');
+const weatherTemp = document.getElementById('bb-corner-weather-deg');
+const weatherDesc = document.getElementById('bb-corner-weather-words');
+const weatherLoc = document.getElementById('bb-corner-weather-city');
 function wmoToText(code){
   const m = {
     0:'clear',1:'mainly clear',2:'partly cloudy',3:'overcast',
@@ -97,7 +97,7 @@ function initWeather(){
   const fallback = {lat:37.3875, lon:-122.0575, name:'Silicon Valley'};
   if(weatherLoc) weatherLoc.textContent = fallback.name;
   // click weather to change city manually
-  const weatherEl = document.getElementById('weather');
+  const weatherEl = document.getElementById('bb-corner-weather');
   if(weatherEl){
     weatherEl.style.pointerEvents = 'auto';
     weatherEl.style.cursor = 'pointer';
@@ -150,9 +150,9 @@ function initWeather(){
 initWeather();
 
 // ——— Clock / Date / Greeting ———
-const clockEl = document.getElementById('clock');
-const dateEl = document.getElementById('date');
-const greetingEl = document.getElementById('greeting');
+const clockEl = document.getElementById('bb-lock-time');
+const dateEl = document.getElementById('bb-lock-dateline');
+const greetingEl = document.getElementById('bb-lock-hello');
 function updateClock() {
   const now = new Date();
   const h = String(now.getHours()).padStart(2,'0');
@@ -172,9 +172,9 @@ setInterval(updateClock, 30*1000);
 setInterval(() => { if (new Date().getSeconds()===0) updateClock(); }, 1000);
 
 // ——— Search + Suggestions (Google/DuckDuckGo) ———
-const searchForm = document.getElementById('search-form');
-const searchInput = document.getElementById('search-input');
-const suggestionsBox = document.getElementById('suggestions');
+const searchForm = document.getElementById('bb-find-bar');
+const searchInput = document.getElementById('bb-find-field');
+const suggestionsBox = document.getElementById('bb-find-droplist');
 let selectedIndex = -1;
 let currentSuggestions = [];
 
@@ -196,27 +196,27 @@ searchForm.addEventListener('submit', (e) => {
 function renderSuggestions(list){
   currentSuggestions = list;
   selectedIndex = -1;
-  if(!list.length){ suggestionsBox.classList.add('hidden'); searchForm.classList.remove('has-suggestions'); return; }
+  if(!list.length){ suggestionsBox.classList.add('bb-is-hidden'); searchForm.classList.remove('bb-find-open'); return; }
   suggestionsBox.innerHTML = list.map((text,i)=>`
-    <div class="suggestion-item" data-index="${i}" role="option">
+    <div class="bb-find-row" data-index="${i}" role="option">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <span class="suggestion-text">${text.replace(/</g,'&lt;')}</span>
-      <span class="suggestion-go">↗</span>
+      <span class="bb-find-row-text">${text.replace(/</g,'&lt;')}</span>
+      <span class="bb-find-row-arrow">↗</span>
     </div>
   `).join('');
-  suggestionsBox.querySelectorAll('.suggestion-item').forEach(el=>{
-    el.addEventListener('click', ()=> navigateToQuery(el.querySelector('.suggestion-text').textContent));
+  suggestionsBox.querySelectorAll('.bb-find-row').forEach(el=>{
+    el.addEventListener('click', ()=> navigateToQuery(el.querySelector('.bb-find-row-text').textContent));
     el.addEventListener('mousemove', ()=>{
-      suggestionsBox.querySelectorAll('.suggestion-item').forEach(x=>x.classList.remove('active'));
-      el.classList.add('active'); selectedIndex = parseInt(el.dataset.index);
+      suggestionsBox.querySelectorAll('.bb-find-row').forEach(x=>x.classList.remove('bb-is-lit'));
+      el.classList.add('bb-is-lit'); selectedIndex = parseInt(el.dataset.index);
     });
   });
-  suggestionsBox.classList.remove('hidden');
-  searchForm.classList.add('has-suggestions');
+  suggestionsBox.classList.remove('bb-is-hidden');
+  searchForm.classList.add('bb-find-open');
 }
 function hideSuggestions(){
-  suggestionsBox.classList.add('hidden');
-  searchForm.classList.remove('has-suggestions');
+  suggestionsBox.classList.add('bb-is-hidden');
+  searchForm.classList.remove('bb-find-open');
   selectedIndex=-1; currentSuggestions=[];
 }
 let suggestTimer=null, lastFetchController=null;
@@ -251,17 +251,17 @@ searchInput.addEventListener('input', ()=>{
   suggestTimer=setTimeout(()=>fetchSuggestions(q), 180);
 });
 searchInput.addEventListener('keydown', (e)=>{
-  const items=suggestionsBox.querySelectorAll('.suggestion-item');
-  if(suggestionsBox.classList.contains('hidden') || !items.length) return;
+  const items=suggestionsBox.querySelectorAll('.bb-find-row');
+  if(suggestionsBox.classList.contains('bb-is-hidden') || !items.length) return;
   if(e.key==='ArrowDown'){
     e.preventDefault();
     selectedIndex=Math.min(selectedIndex+1, items.length-1);
-    items.forEach((el,i)=>el.classList.toggle('active', i===selectedIndex));
+    items.forEach((el,i)=>el.classList.toggle('bb-is-lit', i===selectedIndex));
     if(selectedIndex>=0) searchInput.value=currentSuggestions[selectedIndex];
   } else if(e.key==='ArrowUp'){
     e.preventDefault();
     selectedIndex=Math.max(selectedIndex-1, -1);
-    items.forEach((el,i)=>el.classList.toggle('active', i===selectedIndex));
+    items.forEach((el,i)=>el.classList.toggle('bb-is-lit', i===selectedIndex));
     if(selectedIndex>=0) searchInput.value=currentSuggestions[selectedIndex];
     else searchInput.value=searchInput.value; // keep typed?
   } else if(e.key==='Escape'){
@@ -275,12 +275,12 @@ document.addEventListener('click', (e)=>{
   if(!searchForm.contains(e.target)) hideSuggestions();
 });
 searchInput.addEventListener('focus', ()=>{
-  if(currentSuggestions.length) { suggestionsBox.classList.remove('hidden'); searchForm.classList.add('has-suggestions'); }
+  if(currentSuggestions.length) { suggestionsBox.classList.remove('bb-is-hidden'); searchForm.classList.add('bb-find-open'); }
 });
 
 // ——— Quick links: 5 MOST-VISITED ONLY ———
-const quickLinksNav = document.getElementById('quick-links');
-const hintEl = document.getElementById('qlink-hint');
+const quickLinksNav = document.getElementById('bb-visit-tray');
+const hintEl = document.getElementById('bb-visit-hint');
 function getFaviconUrl(href){
   try{ const u=new URL(href); return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=64`; }catch{ return ''; }
 }
@@ -306,7 +306,7 @@ function renderFrequentLinks(sites){
     if(!label || label.length>14) label=getHostnameLabel(href);
     if(label.length>14) label=label.slice(0,14);
     const fav=getFaviconUrl(href);
-    return `<a href="${href}" class="qlink"><span class="qlink-icon"><img src="${fav}" width="24" height="24" alt="" onerror="this.outerHTML='<span class=&quot;fallback&quot; style=&quot;display:grid;place-items:center;width:24px;height:24px;font-weight:700;background:#fff;border-radius:4px;&quot;>'+'${label[0].toUpperCase()}'+'</span>'"></span><span class="qlink-label">${label}</span></a>`;
+    return `<a href="${href}" class="bb-visit-tile"><span class="bb-visit-tile-art"><img src="${fav}" width="24" height="24" alt="" onerror="this.outerHTML='<span class=&quot;bb-visit-tile-fallback&quot; style=&quot;display:grid;place-items:center;width:24px;height:24px;font-weight:700;background:#fff;border-radius:4px;&quot;>'+'${label[0].toUpperCase()}'+'</span>'"></span><span class="bb-visit-tile-name">${label}</span></a>`;
   }).join('');
   if(hintEl) hintEl.textContent = 'Most visited';
 }
@@ -373,13 +373,13 @@ window.addEventListener('touchend',()=>{ isDraggingScrub=false; });
 bgVideo.muted=true; frameVideo.muted=true;
 function refreshAudioUI(){
   const muted=frameVideo.muted, paused=frameVideo.paused;
-  playBtn.querySelector('.icon-play').style.display=paused?'block':'none';
-  playBtn.querySelector('.icon-pause').style.display=paused?'none':'block';
-  muteBtn.querySelector('.icon-muted').style.display=muted?'block':'none';
-  muteBtn.querySelector('.icon-unmuted').style.display=muted?'none':'block';
-  if(!muted&&!paused){ audioBadge.textContent='live • sound'; audioBadge.classList.add('live'); }
-  else if(muted){ audioBadge.textContent='muted'; audioBadge.classList.remove('live'); }
-  else { audioBadge.textContent='paused'; audioBadge.classList.remove('live'); }
+  playBtn.querySelector('.bb-glyph-play').style.display=paused?'block':'none';
+  playBtn.querySelector('.bb-glyph-pause').style.display=paused?'none':'block';
+  muteBtn.querySelector('.bb-glyph-muted').style.display=muted?'block':'none';
+  muteBtn.querySelector('.bb-glyph-loud').style.display=muted?'none':'block';
+  if(!muted&&!paused){ audioBadge.textContent='live • sound'; audioBadge.classList.add('bb-is-live'); }
+  else if(muted){ audioBadge.textContent='muted'; audioBadge.classList.remove('bb-is-live'); }
+  else { audioBadge.textContent='paused'; audioBadge.classList.remove('bb-is-live'); }
   playBtn.setAttribute('aria-label', paused?'Play with sound':'Pause');
   muteBtn.setAttribute('aria-label', muted?'Unmute':'Mute');
 }
@@ -404,7 +404,7 @@ Promise.allSettled([bgVideo.play(), frameVideo.play()]).then(refreshAudioUI);
 
 // video missing
 let bgError=false, frameError=false;
-function checkMissing(){ if(bgError&&frameError){ videoNotice.classList.remove('hidden'); bgVideo.style.display='none'; document.getElementById('frame-video').style.display='none'; document.getElementById('frame-video-wrap').style.background='linear-gradient(135deg,#1a1a0a,#0A0A0A)'; } }
+function checkMissing(){ if(bgError&&frameError){ videoNotice.classList.remove('bb-is-hidden'); bgVideo.style.display='none'; document.getElementById('bb-tv-film').style.display='none'; document.getElementById('bb-retro-tube').style.background='linear-gradient(135deg,#1a1a0a,#0A0A0A)'; } }
 bgVideo.addEventListener('error',()=>{ bgError=true; checkMissing(); });
 frameVideo.addEventListener('error',()=>{ frameError=true; checkMissing(); });
 setTimeout(()=>{ if(frameVideo.readyState===0&&bgVideo.readyState===0){ fetch('assets/video.mp4',{method:'HEAD'}).then(r=>{ if(!r.ok){ bgError=true; frameError=true; checkMissing(); }}).catch(()=>{}); }},1200);
@@ -416,12 +416,12 @@ document.addEventListener('keydown',(e)=>{
 // ———————————————————————————————
 //  WINDOW CONTROLS + DRAGGING
 // ———————————————————————————————
-const videoFrame=document.getElementById('video-frame');
-const frameHeader=document.getElementById('frame-header');
-const frameRestore=document.getElementById('frame-restore');
-const stickyNote=document.getElementById('sticky-note');
-const stickyHeader=document.getElementById('sticky-header');
-const stickyRestore=document.getElementById('sticky-restore');
+const videoFrame=document.getElementById('bb-tv-shell');
+const frameHeader=document.getElementById('bb-tv-topbar');
+const frameRestore=document.getElementById('bb-bringback-tv');
+const stickyNote=document.getElementById('bb-paper-note');
+const stickyHeader=document.getElementById('bb-note-topbar');
+const stickyRestore=document.getElementById('bb-bringback-note');
 
 // persist keys
 const FRAME_POS_KEY='bumblebee_frame_pos_v2';
@@ -447,8 +447,8 @@ function makeDraggable(frame, header, posKey){
   function clamp(val, min, max){ return Math.max(min, Math.min(max, val)); }
 
   header.addEventListener('mousedown', (e)=>{
-    if(e.target.closest('.dot')) return; // don't drag when clicking traffic lights
-    dragging=true; frame.classList.add('dragging');
+    if(e.target.closest('.bb-pip')) return; // don't drag when clicking traffic lights
+    dragging=true; frame.classList.add('bb-is-held');
     const rect=frame.getBoundingClientRect();
     startX=e.clientX; startY=e.clientY;
     origLeft=rect.left; origTop=rect.top;
@@ -458,8 +458,8 @@ function makeDraggable(frame, header, posKey){
     e.preventDefault();
   });
   header.addEventListener('touchstart', (e)=>{
-    if(e.target.closest('.dot')) return;
-    dragging=true; frame.classList.add('dragging');
+    if(e.target.closest('.bb-pip')) return;
+    dragging=true; frame.classList.add('bb-is-held');
     const rect=frame.getBoundingClientRect();
     const t=e.touches[0];
     startX=t.clientX; startY=t.clientY;
@@ -487,7 +487,7 @@ function makeDraggable(frame, header, posKey){
   }, {passive:true});
   function endDrag(){
     if(!dragging) return;
-    dragging=false; frame.classList.remove('dragging');
+    dragging=false; frame.classList.remove('bb-is-held');
     try{ localStorage.setItem(posKey, JSON.stringify({left:frame.style.left, top:frame.style.top})); }catch{}
   }
   window.addEventListener('mouseup', endDrag);
@@ -499,11 +499,11 @@ makeDraggable(stickyNote, stickyHeader, STICKY_POS_KEY);
 
 // ——— Video frame traffic lights ———
 function applyFrameState(state){
-  videoFrame.classList.remove('minimized','maximized','hidden-frame');
-  frameRestore.classList.add('hidden');
-  if(state==='minimized') videoFrame.classList.add('minimized');
-  else if(state==='maximized') videoFrame.classList.add('maximized');
-  else if(state==='closed'){ videoFrame.classList.add('hidden-frame'); frameRestore.classList.remove('hidden'); }
+  videoFrame.classList.remove('bb-is-folded','bb-is-big','bb-is-gone-tv');
+  frameRestore.classList.add('bb-is-hidden');
+  if(state==='minimized') videoFrame.classList.add('bb-is-folded');
+  else if(state==='maximized') videoFrame.classList.add('bb-is-big');
+  else if(state==='closed'){ videoFrame.classList.add('bb-is-gone-tv'); frameRestore.classList.remove('bb-is-hidden'); }
   try{ localStorage.setItem(FRAME_STATE_KEY, state); }catch{}
   // keep within viewport after state change
   setTimeout(()=>{
@@ -521,17 +521,17 @@ try{
   const saved=localStorage.getItem(FRAME_STATE_KEY);
   if(saved) applyFrameState(saved);
 }catch{}
-document.querySelectorAll('#video-frame .dot').forEach(btn=>{
+document.querySelectorAll('#bb-tv-shell .bb-pip').forEach(btn=>{
   btn.addEventListener('click',(e)=>{
     e.stopPropagation();
     const action=btn.dataset.action;
     if(action==='close') applyFrameState('closed');
     else if(action==='minimize'){
-      const isMin=videoFrame.classList.contains('minimized');
+      const isMin=videoFrame.classList.contains('bb-is-folded');
       applyFrameState(isMin ? 'normal' : 'minimized');
     }
     else if(action==='expand'){
-      const isMax=videoFrame.classList.contains('maximized');
+      const isMax=videoFrame.classList.contains('bb-is-big');
       applyFrameState(isMax ? 'normal' : 'maximized');
     }
   });
@@ -540,27 +540,27 @@ frameRestore.addEventListener('click', ()=>applyFrameState('normal'));
 
 // double-click header to toggle maximize/minimize
 frameHeader.addEventListener('dblclick',(e)=>{
-  if(e.target.closest('.dot')) return;
-  const isMax=videoFrame.classList.contains('maximized');
+  if(e.target.closest('.bb-pip')) return;
+  const isMax=videoFrame.classList.contains('bb-is-big');
   applyFrameState(isMax ? 'normal' : 'maximized');
 });
 
 // ——— Sticky note ———
-const stickyText=document.getElementById('sticky-text');
-const stickyBody=document.getElementById('sticky-body');
-const colorDots=document.getElementById('color-dots');
-const stickyCount=document.getElementById('sticky-count');
-const stickyClear=document.getElementById('sticky-clear');
+const stickyText=document.getElementById('bb-note-scribble');
+const stickyBody=document.getElementById('bb-note-pad-area');
+const colorDots=document.getElementById('bb-paint-swatches');
+const stickyCount=document.getElementById('bb-note-charcount');
+const stickyClear=document.getElementById('bb-note-clear');
 
 try{
   const savedText=localStorage.getItem(STICKY_TEXT_KEY);
   if(savedText) stickyText.value=savedText;
   const savedColor=localStorage.getItem(STICKY_COLOR_KEY);
-  if(savedColor){ stickyNote.style.background=savedColor; document.querySelectorAll('.color-dot').forEach(d=>d.classList.toggle('active', d.dataset.color===savedColor)); }
+  if(savedColor){ stickyNote.style.background=savedColor; document.querySelectorAll('.bb-paint-dot').forEach(d=>d.classList.toggle('bb-is-lit', d.dataset.color===savedColor)); }
   const savedState=localStorage.getItem(STICKY_STATE_KEY);
-  if(savedState==='closed'){ stickyNote.classList.add('hidden-note'); stickyRestore.classList.remove('hidden'); }
-  else if(savedState==='minimized') stickyNote.classList.add('minimized');
-  else if(savedState==='maximized') stickyNote.classList.add('maximized');
+  if(savedState==='closed'){ stickyNote.classList.add('bb-is-gone-note'); stickyRestore.classList.remove('bb-is-hidden'); }
+  else if(savedState==='minimized') stickyNote.classList.add('bb-is-folded');
+  else if(savedState==='maximized') stickyNote.classList.add('bb-is-big');
 }catch{}
 function updateCount(){ stickyCount.textContent=String(stickyText.value.length); }
 updateCount();
@@ -572,45 +572,45 @@ stickyClear.addEventListener('click', ()=>{
   if(confirm('Clear sticky note?')){ stickyText.value=''; updateCount(); try{ localStorage.setItem(STICKY_TEXT_KEY,''); }catch{} stickyText.focus(); }
 });
 colorDots.addEventListener('click',(e)=>{
-  const dot=e.target.closest('.color-dot'); if(!dot) return;
+  const dot=e.target.closest('.bb-paint-dot'); if(!dot) return;
   const color=dot.dataset.color;
   stickyNote.style.background=color;
-  document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active'));
-  dot.classList.add('active');
+  document.querySelectorAll('.bb-paint-dot').forEach(d=>d.classList.remove('bb-is-lit'));
+  dot.classList.add('bb-is-lit');
   try{ localStorage.setItem(STICKY_COLOR_KEY, color); }catch{}
 });
 
 function applyStickyState(state){
-  stickyNote.classList.remove('minimized','maximized','hidden-note');
-  stickyRestore.classList.add('hidden');
-  if(state==='minimized') stickyNote.classList.add('minimized');
-  else if(state==='maximized') stickyNote.classList.add('maximized');
-  else if(state==='closed'){ stickyNote.classList.add('hidden-note'); stickyRestore.classList.remove('hidden'); }
+  stickyNote.classList.remove('bb-is-folded','bb-is-big','bb-is-gone-note');
+  stickyRestore.classList.add('bb-is-hidden');
+  if(state==='minimized') stickyNote.classList.add('bb-is-folded');
+  else if(state==='maximized') stickyNote.classList.add('bb-is-big');
+  else if(state==='closed'){ stickyNote.classList.add('bb-is-gone-note'); stickyRestore.classList.remove('bb-is-hidden'); }
   try{ localStorage.setItem(STICKY_STATE_KEY, state); }catch{}
 }
-document.querySelectorAll('#sticky-note .dot').forEach(btn=>{
+document.querySelectorAll('#bb-paper-note .bb-pip').forEach(btn=>{
   btn.addEventListener('click',(e)=>{
     e.stopPropagation();
     const action=btn.dataset.sticky;
     if(action==='close') applyStickyState('closed');
-    else if(action==='minimize'){ const isMin=stickyNote.classList.contains('minimized'); applyStickyState(isMin?'normal':'minimized'); }
-    else if(action==='expand'){ const isMax=stickyNote.classList.contains('maximized'); applyStickyState(isMax?'normal':'maximized'); }
+    else if(action==='minimize'){ const isMin=stickyNote.classList.contains('bb-is-folded'); applyStickyState(isMin?'normal':'minimized'); }
+    else if(action==='expand'){ const isMax=stickyNote.classList.contains('bb-is-big'); applyStickyState(isMax?'normal':'maximized'); }
   });
 });
 stickyRestore.addEventListener('click', ()=>applyStickyState('normal'));
 stickyHeader.addEventListener('dblclick',(e)=>{
-  if(e.target.closest('.dot')) return;
-  const isMax=stickyNote.classList.contains('maximized');
+  if(e.target.closest('.bb-pip')) return;
+  const isMax=stickyNote.classList.contains('bb-is-big');
   applyStickyState(isMax?'normal':'maximized');
 });
 
 // —————————————————————
 //  NEWS — Discover (scroll cube) — RSS2JSON + Google News
 // —————————————————————
-const newsGrid = document.getElementById('news-grid');
-const newsStatus = document.getElementById('news-status');
-const newsCategories = document.getElementById('news-categories');
-const newsRefresh = document.getElementById('news-refresh');
+const newsGrid = document.getElementById('bb-discover-reel');
+const newsStatus = document.getElementById('bb-discover-status');
+const newsCategories = document.getElementById('bb-discover-topics');
+const newsRefresh = document.getElementById('bb-discover-retry');
 let currentFeed = 'top';
 const NEWS_CACHE_TTL = 10 * 60 * 1000; // 10 min
 
@@ -640,15 +640,15 @@ function extractImage(item){
   if(m2) return m2[1];
   return '';
 }
-const newsDots = document.getElementById('news-dots');
+const newsDots = document.getElementById('bb-reel-bubbles');
 let newsObserver = null;
 function updateNewsDots(){
   if(!newsGrid || !newsDots) return;
-  const cards = newsGrid.querySelectorAll('.news-card');
+  const cards = newsGrid.querySelectorAll('.bb-story-card');
   if(!cards.length){ newsDots.innerHTML=''; return; }
   if(newsDots.childElementCount !== cards.length){
-    newsDots.innerHTML = Array.from(cards).map((_,i)=>`<span class="news-dot${i===0?' active':''}" data-index="${i}"></span>`).join('');
-    newsDots.querySelectorAll('.news-dot').forEach(dot=>{
+    newsDots.innerHTML = Array.from(cards).map((_,i)=>`<span class="bb-reel-bubble${i===0?' bb-is-lit':''}" data-index="${i}"></span>`).join('');
+    newsDots.querySelectorAll('.bb-reel-bubble').forEach(dot=>{
       dot.addEventListener('click', ()=>{
         const idx = parseInt(dot.dataset.index);
         cards[idx].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
@@ -661,7 +661,7 @@ function updateNewsDots(){
       entries.forEach(e=>{ if(e.isIntersecting && e.intersectionRatio > bestRatio){ bestRatio = e.intersectionRatio; best = e.target; } });
       if(best){
         const idx = Array.from(cards).indexOf(best);
-        newsDots.querySelectorAll('.news-dot').forEach((d,i)=> d.classList.toggle('active', i===idx));
+        newsDots.querySelectorAll('.bb-reel-bubble').forEach((d,i)=> d.classList.toggle('bb-is-lit', i===idx));
       }
     }, { root: newsGrid, threshold: [0.5, 0.75, 1.0] });
     cards.forEach(c=> newsObserver.observe(c));
@@ -670,7 +670,7 @@ function updateNewsDots(){
 function renderNews(items){
   if(!newsGrid) return;
   if(!items || !items.length){
-    newsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:24px; color:var(--text-tertiary);">No headlines right now — try another category or refresh.</div>`;
+    newsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:24px; color:var(--bb-ink-faint);">No headlines right now — try another category or refresh.</div>`;
     if(newsDots) newsDots.innerHTML='';
     return;
   }
@@ -681,14 +681,14 @@ function renderNews(items){
     const link = item.link || '#';
     const source = (item.author || (()=>{ try{ return new URL(link).hostname.replace('www.',''); }catch{ return 'News'; }})()).slice(0,22);
     const time = formatTimeAgo(item.pubDate);
-    const thumb = img ? `<img class="news-card-thumb" src="${img}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">` : `<div class="news-card-thumb" style="display:grid;place-items:center; font-size:18px; color:var(--text-tertiary);">📰</div>`;
+    const thumb = img ? `<img class="bb-story-art" src="${img}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">` : `<div class="bb-story-art" style="display:grid;place-items:center; font-size:18px; color:var(--bb-ink-faint);">📰</div>`;
     const catLabel = currentFeed==='top' ? 'TOP NEWS' : currentFeed.toUpperCase();
-    return `<a class="news-card" href="${link}" target="_blank" rel="noopener">
-      <div class="news-card-thumb-wrap">${thumb}<span class="news-card-pill">${catLabel}</span></div>
-      <div class="news-card-body">
-        <div class="news-card-title">${title}</div>
-        ${desc ? `<div class="news-card-desc">${desc}…</div>` : ''}
-        <div class="news-card-meta"><span class="news-card-source">${source}</span><span>•</span><span>${time}</span></div>
+    return `<a class="bb-story-card" href="${link}" target="_blank" rel="noopener">
+      <div class="bb-story-art-frame">${thumb}<span class="bb-story-kicker">${catLabel}</span></div>
+      <div class="bb-story-copy">
+        <div class="bb-story-headline">${title}</div>
+        ${desc ? `<div class="bb-story-blurb">${desc}…</div>` : ''}
+        <div class="bb-story-byline"><span class="bb-story-outlet">${source}</span><span>•</span><span>${time}</span></div>
       </div>
     </a>`;
   }).join('');
@@ -697,7 +697,7 @@ function renderNews(items){
 }
 async function fetchNews(feed='top'){
   currentFeed = feed;
-  if(newsStatus){ newsStatus.textContent='Loading headlines…'; newsStatus.classList.remove('hidden'); }
+  if(newsStatus){ newsStatus.textContent='Loading headlines…'; newsStatus.classList.remove('bb-is-hidden'); }
   // cache check
   try{
     const cached = localStorage.getItem(getNewsCacheKey(feed));
@@ -705,7 +705,7 @@ async function fetchNews(feed='top'){
       const {ts, data} = JSON.parse(cached);
       if(Date.now()-ts < NEWS_CACHE_TTL && data && data.length){
         renderNews(data);
-        if(newsStatus) newsStatus.classList.add('hidden');
+        if(newsStatus) newsStatus.classList.add('bb-is-hidden');
         // still fetch fresh in background
       }
     }
@@ -726,7 +726,7 @@ async function fetchNews(feed='top'){
     const items = (json.items || []).slice(0,8);
     renderNews(items);
     try{ localStorage.setItem(getNewsCacheKey(feed), JSON.stringify({ts: Date.now(), data: items})); }catch{}
-    if(newsStatus) newsStatus.classList.add('hidden');
+    if(newsStatus) newsStatus.classList.add('bb-is-hidden');
   }catch(e){
     console.warn('news', e);
     // fallback to cached or show error but keep UI
@@ -734,7 +734,7 @@ async function fetchNews(feed='top'){
       const cached = localStorage.getItem(getNewsCacheKey(feed));
       if(cached){
         const {data} = JSON.parse(cached);
-        if(data && data.length){ renderNews(data); if(newsStatus) newsStatus.classList.add('hidden'); return; }
+        if(data && data.length){ renderNews(data); if(newsStatus) newsStatus.classList.add('bb-is-hidden'); return; }
       }
     }catch{}
     if(newsStatus) newsStatus.textContent = 'Could not load news — check connection or try refresh.';
@@ -746,10 +746,10 @@ async function fetchNews(feed='top'){
 }
 if(newsCategories){
   newsCategories.addEventListener('click', (e)=>{
-    const btn = e.target.closest('.news-pill');
+    const btn = e.target.closest('.bb-topic-chip');
     if(!btn) return;
-    newsCategories.querySelectorAll('.news-pill').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
+    newsCategories.querySelectorAll('.bb-topic-chip').forEach(b=>b.classList.remove('bb-is-lit'));
+    btn.classList.add('bb-is-lit');
     fetchNews(btn.dataset.feed);
   });
 }
